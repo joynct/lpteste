@@ -1,28 +1,14 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Landing Page - Energia Solar</title>
+    <title>Economize com Energia Solar - Transforme luz do sol em economia</title>
+    <meta name="description" content="Reduza sua conta de energia em até 95% com energia solar. Faça uma simulação gratuita e descubra quanto você pode economizar!">
   </head>
   <body>
-    <h1 id="titulo-principal">Economize na Conta de Luz com Energia Solar!</h1>
-    <img src="img/banner.jpg" alt="Banner Energia Solar" id="banner-imagem" />
-    <section>
-      <h2 id="descricao-titulo">Cansado das altas tarifas de energia?</h2>
-      <p id="descricao-texto">
-        Descubra como reduzir até 95% da sua conta e ainda valorizar seu imóvel. 
-        Receba uma simulação gratuita com condições exclusivas para sua região.
-      </p>
-    </section>
-    <form name="contato" method="POST" data-netlify="true">
-      <input type="text" name="nome" placeholder="Seu nome" required />
-      <input type="email" name="email" placeholder="Seu e-mail" required />
-      <input type="tel" name="telefone" placeholder="Telefone" required />
-      <button type="submit">Quero minha simulação gratuita</button>
-    </form>
-    <footer>
-      <p>Endereço: Rua Exemplo, 123 - Cidade Solar, BR</p>
-    </footer>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
