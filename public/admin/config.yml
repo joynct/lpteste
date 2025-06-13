@@ -15,9 +15,15 @@ collections:
     files:
       - label: "Página Inicial"
         name: "home"
-        file: "index.html"
+        # MUDE ESTA LINHA:
+        file: "src/data/home.json" # <-- O CMS vai criar/editar este arquivo
+        format: "json"             # <-- Garante que o formato é JSON
         fields:
-          - { label: "Título Principal", name: "titulo-principal", widget: "string" }
-          - { label: "Imagem do Banner", name: "banner-imagem", widget: "image" }
-          - { label: "Título da Descrição", name: "descricao-titulo", widget: "string" }
-          - { label: "Texto da Descrição", name: "descricao-texto", widget: "text" }
+          - { label: "Título Principal", name: "titulo_principal", widget: "string" }
+          - { label: "Imagem do Banner", name: "banner_imagem", widget: "image", default: "/img/placeholder.jpg", allow_multiple: false } # Adicionado default e allow_multiple
+          - { label: "Título da Descrição", name: "descricao_titulo", widget: "string" }
+          - { label: "Texto da Descrição", name: "descricao_texto", widget: "markdown" } # Alterado de 'text' para 'markdown'
+          # Se você tiver mais campos do seu home.json, adicione-os aqui
+          # Exemplo:
+          # - { label: "Título da Simulação", name: "simulacao_titulo", widget: "string" }
+          # - { label: "Descrição da Simulação", name: "simulacao_descricao", widget: "string" }
