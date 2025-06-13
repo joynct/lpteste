@@ -1,5 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // <-- Adicionado 'useEffect' aqui!
 import { Sun, Zap, TrendingDown, Shield, Phone, MapPin, Clock, CheckCircle, ArrowRight } from 'lucide-react';
+
+// Se você tiver arquivos CSS globais que precisam ser importados,
+// coloque-os aqui. Por exemplo, se você tem um 'index.css' ou 'tailwind.css'
+// Se o Tailwind CSS está configurado para ser processado automaticamente,
+// talvez você não precise de um import direto aqui, mas é bom verificar.
+// import './index.css'; // Exemplo de import de CSS
 
 function App() {
   const [formData, setFormData] = useState({
@@ -9,6 +15,42 @@ function App() {
     cidade: ''
   });
 
+  // *** ESTADO PARA O CONTEÚDO EDITÁVEL ***
+  // Definimos uma interface ou tipo para 'content' para ajudar o TypeScript
+  interface Content {
+    titulo_principal: string;
+    banner_imagem: string;
+    descricao_titulo: string;
+    descricao_texto: string;
+    // Adicione outros campos aqui conforme você os definir no config.yml
+    // Por exemplo, se tiver um campo para o texto da seção de simulação:
+    // simulacao_titulo: string;
+    // simulacao_descricao: string;
+    // endereco_rua: string;
+    // endereco_cidade_uf: string;
+    // atendimento_dias: string;
+    // atendimento_horas: string;
+    // contato_telefone: string;
+    // contato_email: string;
+  }
+
+  // Inicializa o estado 'content' com os valores padrão e o tipo 'Content'
+  const [content, setContent] = useState<Content>({
+    titulo_principal: "Chega de contas caras de energia. Produza a sua própria!",
+    banner_imagem: "https://images.pexels.com/photos/433308/pexels-photo-433308.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    descricao_titulo: "Transforme a luz do sol em economia real para sua família",
+    descricao_texto: "Todos os meses, o valor da conta de energia aumenta — e você continua pagando por algo que poderia ser seu. Com energia solar, você reduz sua conta em até 95% e ainda valoriza seu imóvel."
+    // Adicione os valores padrão para os outros campos que você definir no CMS
+    // simulacao_titulo: "Faça uma simulação gratuita",
+    // simulacao_descricao: "Preencha seus dados e descubra quanto você pode economizar com energia solar.",
+    // endereco_rua: "Rua Exemplo, nº 123 - Centro",
+    // endereco_cidade_uf: "Cidade/UF",
+    // atendimento_dias: "Segunda a sexta",
+    // atendimento_horas: "das 08h às 18h",
+    // contato_telefone: "(11) 99999-9999",
+    // contato_email: "contato@energiasolar.com",
+  });
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -16,6 +58,27 @@ function App() {
       [name]: value
     }));
   };
+
+  // *** useEffect PARA BUSCAR O JSON ***
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const response = await fetch('/src/data/home.json'); // Caminho para o JSON
+        if (!response.ok) {
+          console.warn("home.json não encontrado ou erro ao carregar. Usando conteúdo padrão.");
+          // Se houver erro, o estado já tem os defaults definidos acima, então não precisamos fazer mais nada aqui
+          return;
+        }
+        const data: Content = await response.json(); // Força o tipo de 'data' para 'Content'
+        setContent(data); // Atualiza o estado com os dados do JSON
+      } catch (error) {
+        console.error('Erro ao carregar o conteúdo:', error);
+        // Em caso de erro na requisição, o estado manterá os defaults
+      }
+    };
+
+    fetchContent();
+  }, []); // O array vazio [] garante que este efeito rode apenas uma vez, após a montagem inicial
 
   const benefits = [
     {
@@ -52,12 +115,16 @@ function App() {
                 <Sun className="w-12 h-12 text-yellow-900" />
               </div>
             </div>
+            {/* *** SUBSTITUINDO O TÍTULO PRINCIPAL *** */}
             <h1 id="titulo-principal" className="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
-              Chega de contas caras de energia.
-              <span className="text-yellow-400 block">Produza a sua própria!</span>
+              {/* O Decap CMS salva o título em 'titulo_principal' */}
+              {/* Se 'titulo_principal' no CMS contiver o <span>, remova o .split('<span')[0] */}
+              {/* Se o <span> for fixo, deixe como está */}
+              {content.titulo_principal} 
             </h1>
+            {/* *** SUBSTITUINDO A DESCRIÇÃO TÍTULO DA SEÇÃO HERO *** */}
             <p className="text-xl lg:text-2xl mb-8 text-blue-100 font-light">
-              Transforme a luz do sol em economia real para sua família
+              {content.descricao_titulo}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="#formulario" className="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold py-4 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center">
@@ -77,8 +144,9 @@ function App() {
       <section id="banner" className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
+            {/* *** SUBSTITUINDO A IMAGEM DO BANNER *** */}
             <img 
-              src="https://images.pexels.com/photos/433308/pexels-photo-433308.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+              src={content.banner_imagem} // O Decap CMS salva a URL da imagem em 'banner_imagem'
               alt="Painéis solares instalados em residência moderna" 
               id="banner-imagem"
               className="w-full h-64 lg:h-96 object-cover rounded-2xl shadow-2xl"
@@ -87,7 +155,7 @@ function App() {
         </div>
       </section>
 
-      {/* BENEFÍCIOS */}
+      {/* BENEFÍCIOS - (Manterá o conteúdo fixo do React, não mapeado no CMS, a menos que você configure campos para isso) */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
@@ -113,17 +181,17 @@ function App() {
       <section id="descricao" className="py-16 bg-gradient-to-r from-green-50 to-blue-50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
+            {/* *** SUBSTITUINDO O TÍTULO DA DESCRIÇÃO *** */}
             <h2 id="descricao-titulo" className="text-3xl lg:text-4xl font-bold mb-8 text-gray-800">
-              Transforme luz do sol em economia
+              {content.descricao_titulo}
             </h2>
+            {/* *** SUBSTITUINDO O TEXTO DA DESCRIÇÃO (usando dangerouslySetInnerHTML) *** */}
             <div id="descricao-texto" className="text-lg lg:text-xl text-gray-700 leading-relaxed space-y-6">
-              <p>
-                Todos os meses, o valor da conta de energia aumenta — e você continua pagando por algo que poderia ser seu. Com energia solar, você reduz sua conta em até <strong className="text-green-600">95%</strong> e ainda valoriza seu imóvel.
-              </p>
-              <p>
-                Chega de incertezas e tarifas abusivas. Torne-se independente da rede elétrica e comece a economizar já no primeiro mês após a instalação!
-              </p>
+              {/* O texto vem como Markdown e o CMS o converte para HTML.
+                  Usamos dangerouslySetInnerHTML para renderizar esse HTML. */}
+              <div dangerouslySetInnerHTML={{ __html: content.descricao_texto }}></div>
             </div>
+            {/* Os números abaixo continuarão fixos, a menos que você os mapeie no CMS */}
             <div className="mt-12 grid sm:grid-cols-3 gap-8 text-center">
               <div className="bg-white p-6 rounded-xl shadow-md">
                 <div className="text-3xl font-bold text-green-600 mb-2">95%</div>
@@ -142,7 +210,8 @@ function App() {
         </div>
       </section>
 
-      {/* FORMULÁRIO DE CONTATO COM CALL TO ACTION */}
+      {/* FORMULÁRIO DE CONTATO COM CALL TO ACTION (conteúdo fixo do React) */}
+      {/* Se quiser editar o título e a descrição do formulário, crie campos no CMS para isso */}
       <section id="formulario" className="py-16 bg-gradient-to-br from-blue-900 to-green-800">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center text-white">
@@ -232,7 +301,8 @@ function App() {
         </div>
       </section>
 
-      {/* ENDEREÇO E INFORMAÇÕES DE CONTATO */}
+      {/* ENDEREÇO E INFORMAÇÕES DE CONTATO (conteúdo fixo do React) */}
+      {/* Para tornar esses campos editáveis, você precisaria adicionar campos para eles no CMS e usar 'content.campo_aqui' */}
       <footer className="bg-gray-900 text-white py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
