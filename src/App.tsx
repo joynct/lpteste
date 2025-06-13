@@ -63,7 +63,7 @@ function App() {
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const response = await fetch('/src/data/home.json'); // Caminho para o JSON
+        const response = await fetch('/data/home.json'); // Caminho para o JSON
         if (!response.ok) {
           console.warn("home.json não encontrado ou erro ao carregar. Usando conteúdo padrão.");
           // Se houver erro, o estado já tem os defaults definidos acima, então não precisamos fazer mais nada aqui
