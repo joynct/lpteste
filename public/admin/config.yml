@@ -1,0 +1,23 @@
+backend:
+  name: github
+  repo: joynct/lpteste
+  branch: main
+  auth_type: implicit
+  base_url: https://api.netlify.com
+  site_domain: lp-testesolar.netlify.app
+
+media_folder: "public/img"
+public_folder: "/img"
+
+collections:
+  - name: "conteudo"
+    label: "Conteúdo do Site"
+    files:
+      - label: "Página Inicial"
+        name: "home"
+        file: "index.html"
+        fields:
+          - { label: "Título Principal", name: "titulo-principal", widget: "string" }
+          - { label: "Imagem do Banner", name: "banner-imagem", widget: "image" }
+          - { label: "Título da Descrição", name: "descricao-titulo", widget: "string" }
+          - { label: "Texto da Descrição", name: "descricao-texto", widget: "text" }
